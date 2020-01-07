@@ -47,8 +47,8 @@ fi
 
 
 # Log when internet goes up again, add a while statement for infinite loop.
-# Make the function exit when we have internet. Dont forget sleep X seconds and
-# rm $PIDFILE after a successful execution.
+# Make the function exit when we have internet. Add new external IP and for
+# how long internet was down.
 
 function create() {
 	while true; do
@@ -56,6 +56,7 @@ function create() {
 			echo "Internet OK: $(date "+%T %Y-%m-%d")" >> ${LOGFILE}
 			echo "========================" >> ${LOGFILE}
 			echo "" >> ${LOGFILE}
+			mail -s "Internet Status" ${EMAILURL} < ${LOGFILE}  #Send email
 			rm $PIDFILE	# Kill the PID process
 			exit 1
 		else
@@ -74,7 +75,6 @@ while true; do
 		echo "" >> ${LOGFILE}
 		echo "========================" >> ${LOGFILE}
 		echo "Internet FAILED: ${CURRENTDATE}" >> ${LOGFILE}
-		mail -s "Internet Status" ${EMAILURL} < ${LOGFILE}
 		exit 1	
 	else
 		create
