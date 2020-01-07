@@ -9,10 +9,11 @@
 # Summary for the period and states the new external IP.
 
 # Declaring variables
-TESTURL="8.8.8.8"                   		 	  # Url to test against
-CURRENTDATE=$(date "+%T %Y-%m-%d")  	 		  # Time and date
-LOGFILE="/home/pi/logs/internet-checker.log"      	  # Path to log file
-PIDFILE='/var/git/internet-checker/internet-checker.pid'  # PID to not start more instances of the script
+TESTURL="8.8.8.8"                   		 		    # Url to test against
+CURRENTDATE=$(date "+%T %Y-%m-%d")  	 			    # Time and date
+LOGFILE="/path/to/project/internet-checker.log" 		    # Enter your project path
+PIDFILE="/path/to/project/internet-checker.pid"  		    # Enter your project path
+EMAILURL=""							    # Your email
 
 # Setup for PID file so that we dont get millions
 # of instances of our application when internet
@@ -55,7 +56,6 @@ function create() {
 			echo "Internet OK: $(date "+%T %Y-%m-%d")" >> ${LOGFILE}
 			echo "========================" >> ${LOGFILE}
 			echo "" >> ${LOGFILE}
-			mail -s "Internet Status" mikael.scharstrom@gmail.com < ${LOGFILE}
 			rm $PIDFILE	# Kill the PID process
 			exit 1
 		else
@@ -74,6 +74,7 @@ while true; do
 		echo "" >> ${LOGFILE}
 		echo "========================" >> ${LOGFILE}
 		echo "Internet FAILED: ${CURRENTDATE}" >> ${LOGFILE}
+		mail -s "Internet Status" ${EMAILURL} < ${LOGFILE}
 		exit 1	
 	else
 		create
